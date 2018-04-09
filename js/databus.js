@@ -23,11 +23,20 @@ export default class DataBus {
     this.frame      = 0
     this.score      = 0
     this.speed      = 6
+    this.cactus     = []
     this.gameOver   = false
   }
 
   update() {
     this.speed = 6 + parseInt(this.frame / 200)
     this.speed = Math.min(this.speed, 25)
+  }
+
+  removeCactus(cactus) {
+    let temp = this.cactus.shift()
+
+    temp.visible = false
+
+    this.pool.recover('cactus', cactus)
   }
 }

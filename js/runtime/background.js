@@ -19,7 +19,7 @@ export default class BackGround extends Sprite {
 
   update(speed) {
     if (this.showBlend == false) {
-      this.sourceX += speed
+      this.sourceX += speed / (screenWidth * 2) * 1860
       var maxOffset = 1600 - screenWidth
       if (this.sourceX >= maxOffset) {
         //第一张滚到了尾巴
@@ -29,7 +29,7 @@ export default class BackGround extends Sprite {
         this.showBlend = true
       }
     } else {
-      this.x -= speed / 1860 * (screenWidth * 2)
+      this.x -= speed
       this.secondX = this.x + screenWidth
       if (this.secondX <= 0) {
         this.x = 0

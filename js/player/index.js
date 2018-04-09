@@ -7,6 +7,7 @@ const screenHeight   = window.innerHeight
 const trexLeftX      = 1508
 const trexRightX     = 1596
 const trexStay       = 1332
+const trexGameOver   = 1684
 
 const groundY = screenHeight / 2
 const jumpY   = screenHeight / 6
@@ -33,7 +34,6 @@ export default class Player extends Sprite {
         this.y += this.velovity
         this.velovity += 0.2
       }
-      console.log(this.y)
 
       this.jumpInterval--
     } else {
@@ -54,5 +54,9 @@ export default class Player extends Sprite {
     this.velovity = (groundY - jumpY) / (jumpDuration / 3)
   
     this.sourceX = trexStay
+  }
+
+  gameOver () {
+    this.sourceX = trexGameOver
   }
 }

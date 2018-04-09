@@ -1,5 +1,6 @@
 import BackGround from './runtime/background'
 import Player from './player/index'
+import Cactus from './npc/cactus'
 import DataBus from './databus'
 
 let ctx = canvas.getContext('2d')
@@ -25,6 +26,8 @@ export default class Main {
   }
 
   restart() {
+    databus.reset()
+
     this.bindLoop = this.loop.bind(this)
 
     this.aniId = window.requestAnimationFrame(
@@ -44,6 +47,10 @@ export default class Main {
     this.bg.render(ctx)
     this.trex.render(ctx)
 
+    databus.cactus.forEach((item) => {
+      item.render(ctx)
+    })
+
     ctx.fillStyle = "red"
     ctx.font = "20px Arial"
 
@@ -62,14 +69,22 @@ export default class Main {
     databus.update()
     this.bg.update(databus.speed)
     this.trex.update()
+
+    //此处要倒序，如果顺序遍历，在删除第一个元素后，第二个会被跳过
+    for (var i = databus.cactus.length - 1; i >= 0; i--) {
+      databus.cactus[i].update(databus.speed)
+    }
+
+    this.generateCactus()
+    this.collisionDetection()
   }
 
   touchEventHandler(e) {
-    // e.preventDefault()
-    // let x = e.touches[0].clientX
-    // let y = e.touches[0].clientY
-    
-    this.trex.jump()
+    if (databus.gameOver === false) {
+      this.trex.jump()
+    } else {
+      this.restart()
+    }
     //databus.gameOver = true
   }
 
@@ -85,6 +100,24 @@ export default class Main {
         this.bindLoop,
         canvas
       )
+    }
+  }
+
+  //生成新的仙人掌
+  generateCactus(){
+    if (databus.frame % (160 - databus.speed * 4) === 0) {
+      var cactus = databus.pool.getItemByClass('cactus', Cactus)
+      cactus.reset()
+      databus.cactus.push(cactus)
+    }
+  }
+
+  // 全局碰撞检测
+  collisionDetection() {
+    if (databus.cactus.length > 0 && 
+    databus.cactus[0].isCollideWith(this.trex)) {
+      databus.gameOver = true
+      this.trex.gameOver()
     }
   }
 }
