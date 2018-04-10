@@ -10,8 +10,9 @@ const trexStay       = 1332
 const trexGameOver   = 1684
 
 const groundY = screenHeight / 2
-const jumpY   = screenHeight / 6
-const jumpDuration = 45
+const jumpY   = 20
+const jumpDuration = 1000  //毫秒
+const initialVelocity = -12
 
 let databus = new DataBus()
 
@@ -19,25 +20,26 @@ export default class Player extends Sprite {
   constructor() {
     super(trexLeftX, 2, 88, 92, 90, groundY, 88, 92)
 
-    this.jumpInterval = 0
+    this.isJumping = false
 
     this.updateCollideRects()
   }
 
   update() {
-    if (this.jumpInterval > 0) {
+    if (this.isJumping) {
       //跳跃动画
-      if (this.jumpInterval > jumpDuration / 2) {
-        //上升动画
-        this.velovity -= 0.2
-        this.y -= this.velovity
-      } else {
-        //下降动画
-        this.y += this.velovity
-        this.velovity += 0.2
+      this.y += Math.round(this.velovity)
+      this.velovity += 0.6
+      if (this.y < jumpY) {
+        if (this.velovity < initialVelocity / 2) {
+          this.velovity = initialVelocity / 2
+        }
       }
-
-      this.jumpInterval--
+      if (this.y >= groundY) {
+        //落地
+        this.isJumping = false
+        this.y = groundY
+      }
     } else {
       //跑步动画
       var index = databus.frame % 10
@@ -58,10 +60,10 @@ export default class Player extends Sprite {
   }
 
   jump() {
-    if (this.jumpInterval > 0) return
+    if (this.isJumping) return
 
-    this.jumpInterval = jumpDuration - 1
-    this.velovity = (groundY - jumpY) / (jumpDuration / 3)
+    this.isJumping = true
+    this.velovity = initialVelocity
   
     this.sourceX = trexStay
   }
