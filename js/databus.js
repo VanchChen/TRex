@@ -32,5 +32,7 @@ export default class DataBus {
   update() {
     this.speed = 6 + parseInt(this.frame / 200)
     this.speed = Math.min(this.speed, 25)
+
+    this.score = Math.floor(this.frame / 6)
   }
 }

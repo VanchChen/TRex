@@ -1,63 +1,43 @@
+import Sprite from '../base/sprite'
+import DataBus from '../databus'
+let databus = new DataBus()
+
 const screenWidth  = window.innerWidth
 const screenHeight = window.innerHeight
 
-let atlas = new Image()
-atlas.src = 'images/Common.png'
+const maxPower = 6
 
 export default class GameInfo {
-  renderGameScore(ctx, score) {
-    ctx.fillStyle = "#ffffff"
-    ctx.font      = "20px Arial"
-
-    ctx.fillText(
-      score,
-      10,
-      30
-    )
+  constructor() {
+    this.nums = []
+    for (var i = 0; i < maxPower; i++) {
+      var icon = new NumberIcon(0, 0, 20, 24, 10 + i * 20, 10, 120 / maxPower, 24)
+      icon.reset(0)
+      this.nums.push(icon)
+    }
   }
 
-  renderGameOver(ctx, score) {
-    ctx.drawImage(atlas, 0, 0, 119, 108, screenWidth / 2 - 150, screenHeight / 2 - 100, 300, 300)
-
-    ctx.fillStyle = "#ffffff"
-    ctx.font    = "20px Arial"
-
-    ctx.fillText(
-      '游戏结束',
-      screenWidth / 2 - 40,
-      screenHeight / 2 - 100 + 50
-    )
-
-    ctx.fillText(
-      '得分: ' + score,
-      screenWidth / 2 - 40,
-      screenHeight / 2 - 100 + 130
-    )
-
-    ctx.drawImage(
-      atlas,
-      120, 6, 39, 24,
-      screenWidth / 2 - 60,
-      screenHeight / 2 - 100 + 180,
-      120, 40
-    )
-
-    ctx.fillText(
-      '重新开始',
-      screenWidth / 2 - 40,
-      screenHeight / 2 - 100 + 205
-    )
-
-    /**
-     * 重新开始按钮区域
-     * 方便简易判断按钮点击
-     */
-    this.btnArea = {
-      startX: screenWidth / 2 - 40,
-      startY: screenHeight / 2 - 100 + 180,
-      endX  : screenWidth / 2  + 50,
-      endY  : screenHeight / 2 - 100 + 255
+  update() {
+    var remain = databus.score
+    for (var i = 0; i < maxPower; i++) {
+      var num = Math.floor(remain / Math.pow(10, maxPower - 1 - i))
+      this.nums[i].reset(num)
+      remain = remain - num * Math.pow(10, maxPower - 1 - i)
     }
+  }
+
+  render(ctx) {
+    this.nums.forEach((item) => {
+      item.render(ctx)
+    })
+  }
+}
+
+class NumberIcon extends Sprite {
+  reset(num) {
+    this.num = num
+
+    this.sourceX = num * 20 + 949
   }
 }
 

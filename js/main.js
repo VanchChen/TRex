@@ -1,4 +1,6 @@
+import Sprite from './base/sprite'
 import BackGround from './runtime/background'
+import GameInfo from './runtime/gameinfo'
 import Player from './player/index'
 import Cactus from './npc/cactus'
 import Cloud from './npc/cloud'
@@ -7,15 +9,19 @@ import DataBus from './databus'
 let ctx = canvas.getContext('2d')
 let databus = new DataBus()
 
+const screenWidth = window.innerWidth
+const screenHeight = window.innerHeight
+
 /**
  * 游戏主函数
  */
 export default class Main {
   constructor() {
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    canvas.width = screenWidth
+    canvas.height = screenHeight
 
     this.bg = new BackGround()
+    this.info = new GameInfo()
     this.trex = new Player()
 
     this.touchHandler = this.touchEventHandler.bind(this)
@@ -56,9 +62,7 @@ export default class Main {
     //画小恐龙
     this.trex.render(ctx)
     //画分数
-    ctx.fillStyle = "red"
-    ctx.font = "20px Arial"
-    ctx.fillText(databus.frame,10,30)
+    this.info.render(ctx)
   }
 
   // 游戏逻辑更新主函数
@@ -69,6 +73,7 @@ export default class Main {
     databus.update()
     this.bg.update(databus.speed)
     this.trex.update()
+    this.info.update()
 
     //此处要倒序，如果顺序遍历，在删除第一个元素后，第二个会被跳过
     for (var i = databus.cactus.length - 1; i >= 0; i--) {
@@ -92,7 +97,6 @@ export default class Main {
     } else {
       this.restart()
     }
-    //databus.gameOver = true
   }
 
   // 实现游戏帧循环
@@ -107,6 +111,9 @@ export default class Main {
         this.bindLoop,
         canvas
       )
+    } else {
+      this.gameOverHint.render(ctx)
+      this.gameOverHintBtn.render(ctx)
     }
   }
 
@@ -118,7 +125,7 @@ export default class Main {
       databus.cactus.push(cactus)
     }
   }
-
+  //生成新的云
   generateCloud() {
     var needAddCloud = false
     if (databus.cloud.length === 0) {
@@ -137,8 +144,18 @@ export default class Main {
   collisionDetection() {
     if (databus.cactus.length > 0 && 
       databus.cactus[0].isCollidedWith(this.trex.collideRects)) {
-      databus.gameOver = true
-      this.trex.gameOver()
+      this.gameOver()
+    }
+  }
+
+  gameOver() {
+    databus.gameOver = true
+    this.trex.gameOver()
+
+    //展示结束提示
+    if (!this.gameOverHint) {
+      this.gameOverHint = new Sprite(950, 28, 382, 24, screenWidth / 2 - 382 / 2, screenHeight / 3, 382, 24)
+      this.gameOverHintBtn = new Sprite(0, 2, 68, 64, screenWidth / 2 - 68 / 2, screenHeight / 5 * 3, 68, 64)
     }
   }
 }
