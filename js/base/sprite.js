@@ -41,19 +41,30 @@ export default class Sprite {
 
   /**
    * 简单的碰撞检测定义：
-   * 另一个精灵的中心点处于本精灵所在的矩形内即可
-   * @param{Sprite} sp: Sptite的实例
+   * 两个矩形有相交的部分就是碰撞了
+   * 传人矩形数组，元素也是数组，4个数值为x,y,width,height
    */
-  isCollideWith(sp) {
-    let spX = sp.x + sp.width / 2
-    let spY = sp.y + sp.height / 2
-
-    if ( !this.visible || !sp.visible )
+  isCollidedWith(rects) {
+    if (!this.visible || rects.length === 0)
       return false
 
-    return !!(   spX >= this.x
-              && spX <= this.x + this.width
-              && spY >= this.y
-              && spY <= this.y + this.height  )
+    var isIntersect = false
+    for (var i = 0; i < rects.length - 1; i++) {
+      var rect = rects[i]
+      if (rect.length != 4) {
+        continue
+      }
+      if (!((rect[0] > (this.x + this.width)) ||
+        ((rect[0] + rect[2]) < this.x) ||
+        (rect[1] > (this.y + this.height)) ||
+        ((rect[1] + rect[3]) < this.y))) {
+          //不不相交
+          isIntersect = true
+          break
+        }
+    }
+
+    return isIntersect
+
   }
 }

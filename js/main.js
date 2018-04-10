@@ -14,8 +14,6 @@ export default class Main {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
 
-    // 维护当前requestAnimationFrame的id
-    this.aniId = 0
     this.bg = new BackGround()
     this.trex = new Player()
 
@@ -115,7 +113,7 @@ export default class Main {
   // 全局碰撞检测
   collisionDetection() {
     if (databus.cactus.length > 0 && 
-    databus.cactus[0].isCollideWith(this.trex)) {
+      databus.cactus[0].isCollidedWith(this.trex.collideRects)) {
       databus.gameOver = true
       this.trex.gameOver()
     }
