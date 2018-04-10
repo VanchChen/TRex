@@ -1,6 +1,7 @@
 import BackGround from './runtime/background'
 import Player from './player/index'
 import Cactus from './npc/cactus'
+import Cloud from './npc/cloud'
 import DataBus from './databus'
 
 let ctx = canvas.getContext('2d')
@@ -42,21 +43,22 @@ export default class Main {
     ctx.fillStyle = "white"
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+    //画背景
     this.bg.render(ctx)
-    this.trex.render(ctx)
-
+    //画☁️
+    databus.cloud.forEach((item) => {
+      item.render(ctx)
+    })
+    //画🌵
     databus.cactus.forEach((item) => {
       item.render(ctx)
     })
-
+    //画小恐龙
+    this.trex.render(ctx)
+    //画分数
     ctx.fillStyle = "red"
     ctx.font = "20px Arial"
-
-    ctx.fillText(
-      databus.frame,
-      10,
-      30
-    )
+    ctx.fillText(databus.frame,10,30)
   }
 
   // 游戏逻辑更新主函数
@@ -72,8 +74,15 @@ export default class Main {
     for (var i = databus.cactus.length - 1; i >= 0; i--) {
       databus.cactus[i].update(databus.speed)
     }
+    for (var i = databus.cloud.length - 1; i >= 0; i--) {
+      databus.cloud[i].update()
+    }
 
+    //生成各种精灵
     this.generateCactus()
+    this.generateCloud()
+
+    //碰撞检测
     this.collisionDetection()
   }
 
@@ -107,6 +116,20 @@ export default class Main {
       var cactus = databus.pool.getItemByClass('cactus', Cactus)
       cactus.reset()
       databus.cactus.push(cactus)
+    }
+  }
+
+  generateCloud() {
+    var needAddCloud = false
+    if (databus.cloud.length === 0) {
+      needAddCloud = true
+    } else if (databus.frame >= databus.cloud[databus.cloud.length - 1].distant) {
+      needAddCloud = true
+    }
+    if (needAddCloud) {
+      var cloud = databus.pool.getItemByClass('cloud', Cloud)
+      cloud.reset()
+      databus.cloud.push(cloud)
     }
   }
 

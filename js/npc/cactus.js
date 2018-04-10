@@ -55,7 +55,9 @@ export default class Cactus extends Sprite {
   update(speed) {
     this.x -= speed
     if (this.x + this.width <= 0) {
-      databus.removeCactus(this)
+      let temp = databus.cactus.shift()
+      temp.visible = false
+      databus.pool.recover('cactus', temp)
     }
   }
 }

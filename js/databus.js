@@ -17,6 +17,8 @@ export default class DataBus {
     this.image.src = 'images/sprite.png'
 
     this.reset()
+    //云不清空
+    this.cloud = []
   }
 
   reset() {
@@ -30,13 +32,5 @@ export default class DataBus {
   update() {
     this.speed = 6 + parseInt(this.frame / 200)
     this.speed = Math.min(this.speed, 25)
-  }
-
-  removeCactus(cactus) {
-    let temp = this.cactus.shift()
-
-    temp.visible = false
-
-    this.pool.recover('cactus', cactus)
   }
 }
