@@ -11,7 +11,7 @@ const screenHeight = window.innerHeight
  */
 export default class BackGround extends Sprite {
   constructor() {
-    super(2, 104, 900, 24, 0, screenHeight / 3 * 2, screenWidth, 24)
+    super(2, 104, 900, 24, 0, screenHeight / 4 * 3, screenWidth, 24)
 
     this.secondX = 0
     this.showBlend = false;

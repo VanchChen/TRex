@@ -17,11 +17,13 @@ const longCount   = 4
 const largeX      = 845
 const largeWidth  = 102
 
+const groundY = screenHeight / 5 * 3
+
 let databus = new DataBus()
 
 export default class Cactus extends Sprite {
   constructor() {
-    super(shortX, 2, shortWidth, shortHeight, screenWidth + shortWidth, screenHeight / 2 + 94 - shortHeight, shortWidth, shortHeight)
+    super(shortX, 2, shortWidth, shortHeight, screenWidth + shortWidth, groundY + 94 - shortHeight, shortWidth, shortHeight)
     this.reset()
   }
 
@@ -47,7 +49,7 @@ export default class Cactus extends Sprite {
     
     this.width = this.sourceWidth
     this.height = this.sourceHeight
-    this.y = screenHeight / 2 + 94 - this.height
+    this.y = groundY + 94 - this.height
     this.x = screenWidth + this.width
     this.visible = true
   }

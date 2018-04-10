@@ -9,7 +9,7 @@ const trexRightX     = 1596
 const trexStay       = 1332
 const trexGameOver   = 1684
 
-const groundY = screenHeight / 2
+const groundY = screenHeight / 5 * 3
 const jumpY   = 20
 const jumpDuration = 1000  //毫秒
 const initialVelocity = -12
