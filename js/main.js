@@ -1,6 +1,7 @@
 import Sprite from './base/sprite'
 import BackGround from './runtime/background'
 import GameInfo from './runtime/gameinfo'
+import Music from './runtime/music'
 import Player from './player/index'
 import Cactus from './npc/cactus'
 import Cloud from './npc/cloud'
@@ -23,6 +24,7 @@ export default class Main {
     this.bg = new BackGround()
     this.info = new GameInfo()
     this.trex = new Player()
+    this.music = new Music()
 
     this.touchHandler = this.touchEventHandler.bind(this)
     canvas.addEventListener('touchstart', this.touchHandler) 
@@ -94,6 +96,7 @@ export default class Main {
   touchEventHandler(e) {
     if (databus.gameOver === false) {
       this.trex.jump()
+      this.music.playPress()
     } else {
       this.restart()
     }
@@ -114,6 +117,7 @@ export default class Main {
     } else {
       this.gameOverHint.render(ctx)
       this.gameOverHintBtn.render(ctx)
+      this.music.playHit()
     }
   }
 
