@@ -119,12 +119,22 @@ export default class Main {
 
   //生成新的仙人掌
   generateCactus(){
-    if (databus.frame % (160 - databus.speed * 4) === 0) {
-      var cactus = databus.pool.getItemByClass('cactus', Cactus)
-      cactus.reset()
-      databus.cactus.push(cactus)
+    if (databus.cactus.length > 0) {
+      //取上一个仙人掌
+      var cactus = databus.cactus[databus.cactus.length - 1]
+      if (cactus.distance < databus.frame) {
+        this.addCactus()
+      }
+    } else {
+      this.addCactus()
     }
   }
+  addCactus() {
+    var cactus = databus.pool.getItemByClass('cactus', Cactus)
+    cactus.reset()
+    databus.cactus.push(cactus)
+  }
+
   //生成新的云
   generateCloud() {
     var needAddCloud = false

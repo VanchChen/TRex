@@ -7,15 +7,10 @@ const screenHeight  = window.innerHeight
 const shortX  = 441
 const shortWidth  = 34
 const shortHeight = 71
-const shortCount  = 6
 
 const longX       = 647
 const longWidth   = 50 
 const longHeight  = 95
-const longCount   = 4
-
-const largeX      = 845
-const largeWidth  = 102
 
 const groundY = screenHeight / 5 * 3
 
@@ -28,22 +23,26 @@ export default class Cactus extends Sprite {
   }
 
   reset() {
-    //随机一个仙人掌图案 仙人掌族群概率相对低一点，为20%
-    var choise = Math.random()
-    if (choise <= 0.4) {
+    //随机一个仙人掌图案
+    var choise = Math.floor(Math.random() * 2)
+    var size = 1
+    if (choise) {
       //选择了小仙人掌
-      this.sourceX = Math.floor(Math.random() * shortCount) * shortWidth + shortX
-      this.sourceWidth = shortWidth
+      if (databus.speed > 4) {
+        //1到3个仙人掌
+        size = Math.floor(Math.random() * 3) + 1
+      }
+      this.sourceX = (shortWidth * size) * (0.5 * (size - 1)) + shortX
+      this.sourceWidth = shortWidth * size
       this.sourceHeight = shortHeight
-    } else if (choise <= 0.8) {
-      //选择了大仙人掌
-      this.sourceX = Math.floor(Math.random() * longCount) * longWidth + longX
-      this.sourceWidth = longWidth
-      this.sourceHeight = longHeight
     } else {
-      //选中了族群
-      this.sourceX = largeX
-      this.sourceWidth = largeWidth
+      //选择了大仙人掌
+      if (databus.speed > 7) {
+        //1到3个仙人掌
+        size = Math.floor(Math.random() * 3) + 1
+      }
+      this.sourceX = (longWidth * size) * (0.5 * (size - 1)) + longX
+      this.sourceWidth = longWidth * size
       this.sourceHeight = longHeight
     }
     
@@ -52,6 +51,8 @@ export default class Cactus extends Sprite {
     this.y = groundY + 94 - this.height
     this.x = screenWidth + this.width
     this.visible = true
+
+    this.distance = databus.frame + (this.width * databus.speed + 150 * 0.6) / databus.speed
   }
 
   update(speed) {
